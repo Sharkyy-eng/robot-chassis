@@ -1,58 +1,46 @@
-# starter-template
+# robot-chassis
 
-Starting point for a new CAD project with [CADbuildr](https://cadbuildr.com).
+3D-printable robot chassis designs written as Python CAD code with
+[CADbuildr](https://cadbuildr.com) foundation.
 
-A tiny Python package with three example parts — a `CadbuildrPlate`, a
-`Spacer`, and the `CadbuildrSign` assembly that bolts them together — plus
-a [Vite + React-Three-Fiber demo](github-io/) that renders the assembly
-live through the CADbuildr SDK.
+- **`RobotChassis`** — a single-deck 2WD chassis: Uno R4, 2 x TT gearmotors,
+  6xAA pack, printed ball castor and HC-SR04 mount.
+- **`MebotBase`** — a 3D-printable take on the Makeblock mBot base, resized to a
+  120 x 100 mm top plate with every mBot hole pattern kept on the 8/16 mm grid.
 
-➡️ **Live demo**: https://cadbuildr.github.io/starter-template/
-
-## Get started
-
-The fastest path is **[CADbuildr Prototype](https://cadbuildr.com/downloads)** —
-our desktop app. It shells the in-browser workbench and runs your Python
-with the system interpreter, so you get hot-reload + a real CAD viewer.
+## View the models in 3D
 
 ```bash
-# 1. fork or clone
-git clone https://github.com/cadbuildr/starter-template.git
-cd starter-template
-
-# 2. install foundation
 uv sync
+pip install cadbuildr-broker
+cadbuildr-broker            # leave running (port 5050)
 ```
 
-Then open `starter-template/` in **CADbuildr Prototype** (File → Open
-folder), press **Play** on `starter/office_sign_assy.py`, and the
-assembly renders in the viewer. Edit the file, hit Play again, watch it
-reshape.
-
-### Don't have CADbuildr Prototype yet?
-
-[Download it from cadbuildr.com/downloads](https://cadbuildr.com/downloads).
-
-You can also run any example as a plain Python script — it'll print the
-DAG and call `show(...)`. To see the geometry in 3D you'll need either
-CADbuildr Prototype or the public viewer at
-[hub.cadbuildr.com/viewer](https://hub.cadbuildr.com/viewer).
+Open [hub.cadbuildr.com/viewer](https://hub.cadbuildr.com/viewer), then:
 
 ```bash
-uv run python starter/office_sign_assy.py
+uv run python starter/robot_chassis.py
+uv run python starter/mebot_base.py
 ```
+
+On Windows, set `PYTHONUTF8=1` first, otherwise `show(...)` fails printing its
+status message (`'charmap' codec can't encode character`).
 
 ## What's in here
 
 ```
-├── starter/                Python package
-│   ├── cadbuildr_plate_part.py    a circular plate with the CADbuildr logo + 3 holes
-│   ├── spacer_part.py             a cylindrical spacer with a centre hole
-│   └── office_sign_assy.py        Assembly: 1 plate + 3 spacers
-├── github-io/              Vite + R3F demo site (deploys to GitHub Pages)
+├── starter/
+│   ├── robot_chassis.py        2WD chassis: printed parts + reference components
+│   ├── mebot_base.py           MEBOT base (mBot-style) part
+│   └── mebot_base_data.py      generated outlines/hole data for mebot_base.py
+├── make_base_data.py       regenerates mebot_base_data.py from the mBot STEP file
+├── mebot_base_V1.3mf       print-ready MEBOT base
 ├── pyproject.toml          Python package manifest
 └── logo.png                used by CADbuildr Prototype's project picker
 ```
+
+See the docstring at the top of each model file for print orientation,
+hardware and dimensions to measure before printing.
 
 ## Make it your own
 
@@ -60,9 +48,9 @@ uv run python starter/office_sign_assy.py
    it in `pyproject.toml` (`[project].name`, `[tool.hatch.build.targets.wheel].packages`).
 2. **Write your Parts.** A Part is a Python class that adds operations
    (sketches, extrusions, fillets, etc.) to itself. See
-   [`spacer_part.py`](starter/spacer_part.py) for a small example.
+   [`mebot_base.py`](starter/mebot_base.py) for an example.
 3. **Assemble them.** An Assembly adds Parts (or other Assemblies) with
-   transforms. See [`office_sign_assy.py`](starter/office_sign_assy.py).
+   transforms. See [`robot_chassis.py`](starter/robot_chassis.py).
 4. **Ship your own demo site.** Copy `github-io/`, change the package
    imports + the wheel filename in `src/starterLocal.ts`, set
    `VITE_APP_BASE_PATH` to your repo path, and let the
